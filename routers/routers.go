@@ -2,15 +2,20 @@ package routers
 
 import (
 	"fmt"
-	"ginServer/controllers"
-	"net/http"
 
+	"github.com/UncleBig/gin-api/controllers"
+	"github.com/UncleBig/gin-api/log"
+
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 )
 
-func Init() http.Handler {
+func Init() *gin.Engine {
 	fmt.Println("init router")
-	router := gin.Default()
-	router.POST("/simple/server/post", controllers.PostHandler)
-	return router
+	r := gin.Default()
+
+	//r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(log.Logger, true))
+	r.POST("/simple/server/post", controllers.PostHandler)
+	return r
 }
